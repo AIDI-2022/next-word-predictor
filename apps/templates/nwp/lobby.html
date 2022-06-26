@@ -19,9 +19,9 @@
     <script type="text/javascript">
         let url = `ws://${window.location.host}/ws/socket-server/`
 
-        const chatSocket = new WebSocket(url)
+        const nwpsocket = new WebSocket(url)
 
-        chatSocket.onmessage = function(e){
+        nwpsocket.onmessage = function(e){
             let data = JSON.parse(e.data)
             console.log('Data:', data)
 
@@ -35,10 +35,25 @@
         }
 
         let form = document.getElementById('form')
+        // form.onkeyup('')
+
+        form.onkeyup = function(e) {
+            // e.preventDefault()
+            if (e.key == " " ||
+                e.code == "Space" ||      
+                e.keyCode == 32      
+            ){
+                let message = e.target.message.value 
+                nwpsocket.send(JSON.stringify({
+                'message':message
+            }))}
+                
+            
+}
         form.addEventListener('submit', (e)=> {
             e.preventDefault()
             let message = e.target.message.value 
-            chatSocket.send(JSON.stringify({
+            nwpsocket.send(JSON.stringify({
                 'message':message
             }))
             form.reset()
