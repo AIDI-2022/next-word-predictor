@@ -39,9 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     #'channels',
-    'apps.home'  # Enable the inner home (home)
-    #'apps.nwp'
+    'apps.home',  # Enable the inner home (home)
+    'apps.nwp'
 ]
 
 MIDDLEWARE = [

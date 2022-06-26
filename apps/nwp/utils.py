@@ -33,13 +33,18 @@ def get_all_predictions(text_sentence, top_clean=5):
     input_ids, mask_idx = encode(bert_tokenizer, text_sentence)
     with torch.no_grad():
         predict = bert_model(input_ids)[0]
-    bert = decode(bert_tokenizer, predict[0, mask_idx, :].topk(top_k).indices.tolist(), top_clean)
+    bert = decode(bert_tokenizer, predict[0, mask_idx, :].topk(top_clean).indices.tolist(), top_clean)
     return {'bert': bert}
 
-def get_prediction_eos(input_text):
+def get_prediction_eos(input_text,topk):
     try:
         input_text += ' <mask>'
-        res = get_all_predictions(input_text, top_clean=int(top_k))
+        res = get_all_predictions(input_text, top_clean=topk)
         return res
     except Exception as error:
         print('error in get_prediction_eos', error)
+
+def predict_next_word(input_text, model='BERT', topk=3):
+    preds = get_prediction_eos(input_text,topk)
+    return preds[model.lower()].split('\n')
+bert_tokenizer, bert_model  = load_model('BERT')

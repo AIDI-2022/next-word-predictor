@@ -1,7 +1,8 @@
 from django.urls import path
 from . import views
+from django.views.decorators.csrf import csrf_exempt
 
 urlpatterns = [
     path('',views.lobby),
-    path('/nwp/',views.predict_next_word),
+    path('nwp/',csrf_exempt(views.nwp)),
 ]
