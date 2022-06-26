@@ -10,7 +10,7 @@ from .utils import predict_next_word
 import json, datetime
 @login_required(login_url="/login/")
 def lobby(request):
-    return render(request,'nwp/lobby.html')
+    return render(request,'nwp/index.html')
 @api_view(['POST'])
 def nwp(request):
         if request.method == 'POST':
