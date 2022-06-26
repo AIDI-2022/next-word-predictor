@@ -29,6 +29,7 @@ def login_view(request):
             msg = 'Error validating the form'
 
     return render(request, "accounts/login.html", {"form": form, "msg": msg})
+    #return render(request, "nwp/lobby.html", {"form": form, "msg": msg})
 
 
 def register_user(request):
@@ -54,3 +55,4 @@ def register_user(request):
         form = SignUpForm()
 
     return render(request, "accounts/register.html", {"form": form, "msg": msg, "success": success})
+    #return render(request, "nwp/lobby.html", {"form": form, "msg": msg})
