@@ -4,20 +4,25 @@ Installing Virtual Environment :
 
 `pip3 install virtualenv`
 
-*Creating a Python Virtual Environment*
-python -m venv venv
+Creating a Python Virtual Environment:
 
-*Activating the newly created virtual env - venv*
-.\venv\Scripts\activate
+`python -m venv venv`
 
-*Install all the libraries from requirements file*
-pip install -r .\requirements
+Activating the newly created virtual env - venv:
 
-*Making all default migrations to the local*
-python manage.py migrate
+`.\venv\Scripts\activate`
 
-*Run the server locally by manually hosting*
-python manage.py runserver
+Install all the libraries from requirements file:
+
+`pip install -r .\requirements`
+
+Making all default migrations to the local:
+
+`python manage.py migrate`
+
+Run the server locally by manually hosting:
+
+`python manage.py runserver`
 
 Activating and running the project on local server
 
