@@ -1,7 +1,8 @@
 # Next-Word-Predictor
 
-*Installing Virtual Environment*
-pip3 install virtualenv
+Installing Virtual Environment :
+
+`pip3 install virtualenv`
 
 *Creating a Python Virtual Environment*
 python -m venv venv
