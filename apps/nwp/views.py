@@ -7,10 +7,16 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
 from .utils import predict_next_word
+from apps.analytics.mixins import ObjectViewMixin
+from apps.analytics.signals import object_viewed_signal
 import json, datetime
+from .models import NWP
+from .serializer import NWP_Serializer
+from django.views.generic import DetailView
 @login_required(login_url="/login/")
 def lobby(request):
     return render(request,'nwp/index.html')
+
 @api_view(['POST'])
 def nwp(request):
         if request.method == 'POST':
@@ -18,6 +24,10 @@ def nwp(request):
                 json_data = json.loads(request.body) # request.raw_post_data w/ Django < 1.4
             try:
                 text = json_data.get('text')
+                serializer = NWP_Serializer(data = text)
+                if serializer.is_valid():
+                    print(f'serializer okay --{text}')
+                    # serializer.save()
                 # model=json_data.get('model','BERT') 
                 # topk = json_data.get('topk',3)
                 predicted_words = predict_next_word(text)
@@ -27,7 +37,14 @@ def nwp(request):
             except Exception as e:
                 return Response({"message":"Failure","time":datetime.datetime.now(),'data':{"error":str(e)}})
 
+def nwp_socket(text):
+    # serializer = NWP_Serializer(sentence)
+    predicted_words = predict_next_word(text)
+    sentence = NWP(sentence=text,predicted = json.dumps(predicted_words))
+    sentence.save()
 
-    # bert_tokenizer, bert_model  = load_model('BERT')
-    # preds = get_prediction_eos(input_text)
-    # return preds[model.lower()].split('\n')
+    return {"message":"Sucess","time":datetime.datetime.now(),'data':predicted_words,'user_resp':text}
+
+
+class ProductDetailView(ObjectViewMixin, DetailView):
+    model = NWP
