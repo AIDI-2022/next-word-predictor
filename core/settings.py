@@ -34,7 +34,6 @@ CSRF_TRUSTED_ORIGINS = ['http://localhost:85', 'http://127.0.0.1', 'https://' + 
 
 INSTALLED_APPS = [
     'rest_framework',
-    'apps.analytics',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -43,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'channels',
     'apps.home',  # Enable the inner home (home)
-    'apps.nwp'
+    'apps.nwp',
+    'apps.analytics',
 ]
 ASGI_APPLICATION = 'core.asgi.application'
 MIDDLEWARE = [
