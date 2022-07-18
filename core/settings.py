@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'channels',
     'apps.home',  # Enable the inner home (home)
-    'apps.nwp'
+    'apps.nwp',
+    'apps.analytics',
 ]
 ASGI_APPLICATION = 'core.asgi.application'
 MIDDLEWARE = [
