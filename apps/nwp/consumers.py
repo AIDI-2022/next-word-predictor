@@ -15,11 +15,15 @@ class NwpConsumer(WebsocketConsumer):
 
     
     def receive(self,text_data):
+        username_str = None
+        username = self.scope["user"]
+        if(username.is_authenticated):
+            username_str = username.username
         text_data_json = json.loads(text_data)
         message = text_data_json.get('message')
-        resp = nwp_socket(message)
+        resp = nwp_socket(message,username_str)
         predicted_words = resp.get('data')
-        print('response----------',resp)
+        # print('response----------',resp)
         # predicted_words = predict_next_word(message)
 
         self.send(text_data=json.dumps({

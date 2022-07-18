@@ -13,6 +13,8 @@ import json, datetime
 from .models import NWP
 from .serializer import NWP_Serializer
 from django.views.generic import DetailView
+from django.contrib.auth.models import User
+
 @login_required(login_url="/login/")
 def lobby(request):
     return render(request,'nwp/index.html')
@@ -37,10 +39,11 @@ def nwp(request):
             except Exception as e:
                 return Response({"message":"Failure","time":datetime.datetime.now(),'data':{"error":str(e)}})
 
-def nwp_socket(text):
+def nwp_socket(text,user_name):
+    user = User.objects.get(username=user_name)
     # serializer = NWP_Serializer(sentence)
     predicted_words = predict_next_word(text)
-    sentence = NWP(sentence=text,predicted = json.dumps(predicted_words))
+    sentence = NWP(user=user,sentence=text,predicted = json.dumps(predicted_words))
     sentence.save()
 
     return {"message":"Sucess","time":datetime.datetime.now(),'data':predicted_words,'user_resp':text}
