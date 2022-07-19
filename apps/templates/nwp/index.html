@@ -31,7 +31,7 @@
               $('#messages').html(wordElements);
 
               $('#messages button').on('click', function(e){
-                $('.predict-text').val($('.predict-text').val() + ' ' + e.target.textContent);
+                $('.predict-text').val($('.predict-text').val() +e.target.textContent);
               });
             }
         }
