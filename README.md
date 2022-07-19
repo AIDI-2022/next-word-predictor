@@ -36,10 +36,14 @@ SignUp Page
 
 ![image](https://user-images.githubusercontent.com/99491659/176275290-8d05529a-b4bc-416a-bfaf-3972223d402f.png)
 
-Testing the application on the local server. The application currently predicts one word next of the typed sentence.
+The application runs on a Django framework and gives a rapid response through a Webscoket connection using BERT engine for prediction. The app takes in the user input text and provides a 3 suggested word predcitons that the user can use as follows.
 
-![image](https://user-images.githubusercontent.com/99491659/176275351-d50fead7-207f-4bd8-8b2b-b5f4178d177e.png)
+![NWP_gif](https://user-images.githubusercontent.com/49874034/179851396-42c78e33-d1d9-4936-b975-92a527943de9.gif)
 
-![image](https://user-images.githubusercontent.com/99491659/176275369-9e5b2193-fbd1-43ec-9a44-921980363a84.png)
+The application stores the user details on the Django's default database viewed from the admin's portal. It stores details like user's name, session id, date and timestamp, typed sentences and predicted words.
 
-![image](https://user-images.githubusercontent.com/99491659/176275407-624c783d-6655-4069-8c12-9ee4fa836d22.png)
+![DB](https://user-images.githubusercontent.com/49874034/179852209-14573fe8-a453-48b8-8078-7ab89cbbf9e5.JPG)
+
+![DB 2](https://user-images.githubusercontent.com/49874034/179852245-cafd8185-d660-4c49-8860-7caea2ea1a34.JPG)
+
+Further, in the upcoming developments, this data will be used for developing analytics for the application. Stay tuned!
