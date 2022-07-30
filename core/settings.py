@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'apps.home',  # Enable the inner home (home)
     'apps.nwp',
     'apps.analytics',
+    'django_plotly_dash.apps.DjangoPlotlyDashConfig',
 ]
 ASGI_APPLICATION = 'core.asgi.application'
 MIDDLEWARE = [
