@@ -23,12 +23,11 @@ class NwpConsumer(WebsocketConsumer):
         message = text_data_json.get('message')
         resp = nwp_socket(message,username_str)
         predicted_words = resp.get('data')
-        # print('response----------',resp)
-        # predicted_words = predict_next_word(message)
-
+        objectId = resp.get('objectId')
         self.send(text_data=json.dumps({
             'type':'chat',
-            'message':predicted_words
+            'message':predicted_words,
+            'objectId':objectId
         }))
 
     def disconnect(self):

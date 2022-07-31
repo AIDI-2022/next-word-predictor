@@ -6,6 +6,7 @@
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <style>
   .suggestion {
@@ -24,7 +25,7 @@
     background-color: #8392AB;
   }
 </style>
-
+{% csrf_token %}
 <div class="container-fluid py-4">
   <div class="row">
     <form id="form" class="form-group shadow-textarea">
@@ -44,7 +45,9 @@
 
             if(data.type === 'chat'){
               var words = data.message;
-              var wordElements = '<button type="button" class="suggestion btn btn-secondary">'+words.join('</button><button type="button" class="suggestion btn btn-secondary">')+'</button><button type="button" class="suggestion btn btn-secondary">None</buttom>';
+              var openBtn = '<button type="button" class="suggestion btn btn-secondary" data-obj='+data.objectId+'>';
+              var closeBtn = '</button>'
+              var wordElements = openBtn + words.join(closeBtn+openBtn) + closeBtn + openBtn + 'None' + closeBtn;
               $('#messages').html(wordElements);
 
               $('#messages button').on('click', function(e){
@@ -53,11 +56,23 @@
                 } else {
                   $('#messages').html(' ');
                 }
+                var objId = $(this).data('obj');
+                var selectedWord = e.target.textContent;
+                $.ajax({
+                  type:'POST',
+                  url:window.location.pathname,
+                  data: {'objectId':objId, 'selectedWord':selectedWord, 'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()},
+                  success: function(){
+                    console.log('Saved the selected word to database.')
+                  }
+
+                })
               });
             }
         }
 
         let form = document.getElementById('form')
+
         form.addEventListener('submit', (e)=> {
             e.preventDefault()
             let message = e.target.message.value 

@@ -9,6 +9,7 @@ class NWP(models.Model):
     sentence = models.CharField(max_length = 5000)
     predicted = models.TextField(null=True)
     created = models.DateTimeField(default=now)
+    selected = models.TextField(null=True)
 
     def __str__(self):
         return f"{self.user} wrote {self.sentence} at {self.created} and the model predicted - {self.predicted}"

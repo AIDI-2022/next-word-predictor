@@ -17,6 +17,8 @@ from django.contrib.auth.models import User
 
 @login_required(login_url="/login/")
 def lobby(request):
+    if request.method == 'POST':
+        saveselection(request)
     return render(request,'nwp/index.html')
 
 @api_view(['POST'])
@@ -41,12 +43,18 @@ def nwp(request):
 
 def nwp_socket(text,user_name):
     user = User.objects.get(username=user_name)
-    # serializer = NWP_Serializer(sentence)
     predicted_words = predict_next_word(text)
     sentence = NWP(user=user,sentence=text,predicted = json.dumps(predicted_words))
     sentence.save()
 
-    return {"message":"Sucess","time":datetime.datetime.now(),'data':predicted_words,'user_resp':text}
+    return {"message":"Sucess","time":datetime.datetime.now(),'data':predicted_words,'user_resp':text,'objectId':sentence.object_id}
+
+def saveselection(request):
+    obj_id = request.POST.get('objectId')
+    object_ = NWP.objects.get(object_id = obj_id)
+    object_.selected = request.POST.get('selectedWord')
+    object_.save()
+    return {'success': True}
 
 
 class ProductDetailView(ObjectViewMixin, DetailView):
