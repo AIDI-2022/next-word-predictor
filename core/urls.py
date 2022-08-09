@@ -14,8 +14,10 @@ urlpatterns = [
 
     # ADD NEW Routes HERE
     path("nwp",include("apps.nwp.urls")),
+    # path('analytics',include("apps.analytics.urls")),
     # Leave `Home.Urls` as last the last line
-    path("", include("apps.home.urls"))
+    path("", include("apps.home.urls")),
+    
    
 
 ]
