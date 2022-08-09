@@ -26,8 +26,13 @@ from apps.home.utils import bar_chart, get_pie_chart
 @login_required(login_url="/login/")
 @api_view(['GET'])
 def index(request):
-    overall_data = pd.DataFrame(list(NWP.objects.all().values()))
+    #overall_data = pd.DataFrame(list(NWP.objects.all().values()))
     user_data = pd.DataFrame(list(NWP.objects.filter(user__username=request.user).values()))
+    if len(user_data) < 1:
+        html_template = loader.get_template('home/welcome.html')
+        context={}
+        return HttpResponse(html_template.render(context, request))
+    
     data_len = len(user_data)
     ignored = user_data.selected.isna().sum()
     selected_none = user_data.selected.str.fullmatch('None').sum()
