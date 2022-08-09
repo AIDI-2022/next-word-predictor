@@ -30,6 +30,8 @@ enddate = date.today()+ timedelta(days=1)
 def index(request):
     #overall_data = pd.DataFrame(list(NWP.objects.all().values()))
     user_data = pd.DataFrame(list(NWP.objects.filter(user__username=request.user).values()))
+    if 'sentence' not in user_data:
+        user_data['sentence'] = ''
     sents = list(user_data.sentence.apply(lambda l: l.split()))
     user_sents_len = len(list(itertools.chain(*sents)))
     try:
