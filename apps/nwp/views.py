@@ -7,8 +7,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
 from .utils import predict_next_word
-from apps.analytics.mixins import ObjectViewMixin
-from apps.analytics.signals import object_viewed_signal
+# from apps.analytics.mixins import ObjectViewMixin
+# from apps.analytics.signals import object_viewed_signal
 import json, datetime
 from .models import NWP
 from .serializer import NWP_Serializer
@@ -57,5 +57,5 @@ def saveselection(request):
     return {'success': True}
 
 
-class ProductDetailView(ObjectViewMixin, DetailView):
-    model = NWP
+# class ProductDetailView(ObjectViewMixin, DetailView):
+#     model = NWP
