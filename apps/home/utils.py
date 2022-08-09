@@ -4,6 +4,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 from plotly.offline import plot
 import pandas as pd
+import ast
+
 def get_client_ip(request):
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
@@ -13,28 +15,37 @@ def get_client_ip(request):
     return ip
 
 
-def word_predicted_bar(data):
-    word_dict = dict()
-    remove = re.compile("[\[\]\"]")
-    for i in data['predicted']:
-        words = remove.sub('',i)
-        words = words.split(",")
-        for j in words:
-            if j not in word_dict.keys():
-                word_dict[eval('j')] = 1
-            else:
-                word_dict[eval('j')] += 1
+def bar_chart(data, column_name, title_text, colorSheme='Tealgrn', top_n=20):
+    # word_dict = dict()
+    # remove = re.compile("[\[\]\"]")
+    # for i in data['predicted']:
+    #     words = remove.sub('',i)
+    #     words = words.split(",")
+    #     for j in words:
+    #         if j not in word_dict.keys():
+    #             word_dict[eval('j')] = 1
+    #         else:
+    #             word_dict[eval('j')] += 1
 
-    word_dict = pd.DataFrame(word_dict.items(), columns = ['Words','Count'])
-    word_dict = word_dict.sort_values('Count', ascending = False)
+    # word_dict = pd.DataFrame(word_dict.items(), columns = ['Words','Count'])
+    # word_dict = word_dict.sort_values('Count', ascending = False)
 
-    df = px.data.stocks(indexed=True)-1
-    fig = px.bar(word_dict, x = word_dict['Words'], y = "Count", title = 'All Predicted Words')
+    #df = px.data.stocks(indexed=True)-1
+    print(column_name=='predicted' and type(data['predicted'][0]) == str)
+    if column_name=='predicted' and type(data['predicted'][0]) == str:
+        data['predicted'] = data['predicted'].apply(lambda x: ast.literal_eval(x))
+    
+    if type(data[column_name][0]) == list:
+        df_predictions = data[column_name].explode(column_name).value_counts().rename_axis('words').reset_index(name='counts')
+    else:
+        df_predictions = data[column_name].value_counts().rename_axis('words').reset_index(name='counts')
+    df_predictions = df_predictions.loc[df_predictions['words'] != 'None']
+    fig = px.bar(df_predictions[:top_n], x = "words", y = "counts", title = title_text, color='counts', color_continuous_scale=colorSheme)
     return fig
 
 def get_pie_chart(labels,counts):
 
-    fig = px.pie(names=labels, values=counts, hole=0.5, color_discrete_sequence=px.colors.sequential.RdBu)
+    fig = px.pie(names=labels, values=counts, hole=0.5, title='How Useful Our Predictions Are', color_discrete_sequence=px.colors.sequential.RdBu)
 
     return fig
 

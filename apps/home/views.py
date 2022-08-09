@@ -20,7 +20,7 @@ from django.contrib.auth.models import User
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.offline import plot
-from apps.home.utils import word_predicted_bar, get_pie_chart
+from apps.home.utils import bar_chart, get_pie_chart
 
 
 @login_required(login_url="/login/")
@@ -35,11 +35,13 @@ def index(request):
     labels = ['Selected Prediction','Selected None', 'Ignored']
     pie_fig = get_pie_chart(labels,[selected_predictions,selected_none,ignored])
 
-    bar_fig = word_predicted_bar(overall_data)
+    bar_fig = bar_chart(user_data,'predicted', 'Top Words We Predicted For You')
+    bar_fig_2 = bar_chart(user_data, 'selected', 'Words You Selected the Most from Predictions','Purpor')
     # bar_plot_ = plot(bar_fig,output_type="div")
     bar_plot_ = bar_fig.to_html(full_html=False, include_plotlyjs='cdn')
+    bar_plot_2 = bar_fig_2.to_html(full_html=False, include_plotlyjs='cdn')
     pie_plot_ = pie_fig.to_html(full_html=False, include_plotlyjs='cdn')
-    context={'plot1':bar_plot_, 'plot2':pie_plot_}
+    context={'plot1':bar_plot_, 'plot2':pie_plot_, 'plot3':bar_plot_2}
     # pie_fig = display_pieplot()
     # pie_plot_ = plot(pie_fig,output_type="div")
     html_template = loader.get_template('home/index.html')
