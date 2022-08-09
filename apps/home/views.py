@@ -4,8 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
-
-
+import itertools
 from django.shortcuts import render
 from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
@@ -20,18 +19,43 @@ from django.contrib.auth.models import User
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.offline import plot
-from apps.home.utils import bar_chart, get_pie_chart
+from apps.home.utils import bar_chart, get_pie_chart,past_activity_plot
+from datetime import date, timedelta
 
+startdate = date.today() - timedelta(days=6)
+enddate = date.today()+ timedelta(days=1)
 
 @login_required(login_url="/login/")
 @api_view(['GET'])
 def index(request):
     #overall_data = pd.DataFrame(list(NWP.objects.all().values()))
     user_data = pd.DataFrame(list(NWP.objects.filter(user__username=request.user).values()))
+    sents = list(user_data.sentence.apply(lambda l: l.split()))
+    user_sents_len = len(list(itertools.chain(*sents)))
+    try:
+        range_user_data = pd.DataFrame(list(NWP.objects.filter(user__username=request.user,created__range=[startdate, enddate]).values()))
+        today_user_data =  pd.DataFrame(list(NWP.objects.filter(user__username=request.user,created__day=str(date.today().day)).values()))
+    except Exception as e:
+        print(str(e))
+        range_user_data = pd.DataFrame()
+        today_user_data = pd.DataFrame()
+    
+    context = {}
+    if len(range_user_data) > 0:
+        range_user_data.created = range_user_data.created.apply(lambda l: l.day)
+        range_user_data = range_user_data.groupby('created').size().rename_axis('days').reset_index(name='predictions')
+        bar_fig_3 = past_activity_plot(range_user_data)
+        bar_plot_3 = bar_fig_3.to_html(full_html=False, include_plotlyjs='cdn')
+        context['plot4'] = bar_plot_3
     if len(user_data) < 1:
         html_template = loader.get_template('home/welcome.html')
         context={}
         return HttpResponse(html_template.render(context, request))
+    context['n_user_preds'] = len(user_data)
+    context['n_user_today_preds'] = len(today_user_data)
+    context['user_sents_len'] = user_sents_len
+    if 'selected' not in user_data:
+        user_data['selected'] = None
     
     data_len = len(user_data)
     ignored = user_data.selected.isna().sum()
@@ -46,9 +70,11 @@ def index(request):
     bar_plot_ = bar_fig.to_html(full_html=False, include_plotlyjs='cdn')
     bar_plot_2 = bar_fig_2.to_html(full_html=False, include_plotlyjs='cdn')
     pie_plot_ = pie_fig.to_html(full_html=False, include_plotlyjs='cdn')
-    context={'plot1':bar_plot_, 'plot2':pie_plot_, 'plot3':bar_plot_2}
-    # pie_fig = display_pieplot()
-    # pie_plot_ = plot(pie_fig,output_type="div")
+    context['plot1'] = bar_plot_
+    context['plot2'] = pie_plot_
+    context['plot3'] = bar_plot_2
+    # context={'plot1':bar_plot_, 'plot2':pie_plot_, 'plot3':bar_plot_2}
+
     html_template = loader.get_template('home/index.html')
     return HttpResponse(html_template.render(context, request))
 

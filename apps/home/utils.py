@@ -16,21 +16,6 @@ def get_client_ip(request):
 
 
 def bar_chart(data, column_name, title_text, colorSheme='Tealgrn', top_n=20):
-    # word_dict = dict()
-    # remove = re.compile("[\[\]\"]")
-    # for i in data['predicted']:
-    #     words = remove.sub('',i)
-    #     words = words.split(",")
-    #     for j in words:
-    #         if j not in word_dict.keys():
-    #             word_dict[eval('j')] = 1
-    #         else:
-    #             word_dict[eval('j')] += 1
-
-    # word_dict = pd.DataFrame(word_dict.items(), columns = ['Words','Count'])
-    # word_dict = word_dict.sort_values('Count', ascending = False)
-
-    #df = px.data.stocks(indexed=True)-1
     print(column_name=='predicted' and type(data['predicted'][0]) == str)
     if column_name=='predicted' and type(data['predicted'][0]) == str:
         data['predicted'] = data['predicted'].apply(lambda x: ast.literal_eval(x))
@@ -49,3 +34,9 @@ def get_pie_chart(labels,counts):
 
     return fig
 
+
+def past_activity_plot(data):
+
+  fig = px.bar(data, x='days', y='predictions', title='Past 7 days activity', color='predictions', color_continuous_scale='Peach')
+
+  return fig

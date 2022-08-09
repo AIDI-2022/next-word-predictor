@@ -58,7 +58,7 @@
 
                 $('#messages button').on('click', function(e){
                   if(e.target.textContent !== 'None') {
-                    $('.predict-text').val($('.predict-text').val() + '' + e.target.textContent);
+                    $('.predict-text').val($('.predict-text').val() + ' ' + e.target.textContent);
                   } else {
                     $('#messages').html(' ');
                   }
